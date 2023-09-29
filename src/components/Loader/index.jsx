@@ -1,4 +1,3 @@
-import React from 'react';
 import { SearchLoader } from './Loader.styled';
 import { MagnifyingGlass } from 'react-loader-spinner';
 

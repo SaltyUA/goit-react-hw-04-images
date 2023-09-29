@@ -1,40 +1,44 @@
-import { Component } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Overlay, Popup } from './Modal.style';
+import { useModalContext } from 'context';
 
-class Modal extends Component {
-  componentDidMount() {
-    document.addEventListener('keydown', this.handlePressEsc);
-  }
+const Modal = ({ toggleModal }) => {
+  const {
+    modalImage: { src, alt },
+  } = useModalContext();
 
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handlePressEsc);
-  }
+  const handlePressEsc = useCallback(
+    e => {
+      if (e.code === 'Escape') {
+        toggleModal();
+      }
+    },
+    [toggleModal]
+  );
 
-  handlePressEsc = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
-    }
-  };
+  useEffect(() => {
+    document.addEventListener('keydown', handlePressEsc);
+  }, [handlePressEsc]);
 
-  handleBackdropClick = e => {
+  useEffect(() => {
+    return () => {
+      document.removeEventListener('keydown', handlePressEsc);
+    };
+  }, [handlePressEsc]);
+
+  const handleBackdropClick = e => {
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      toggleModal();
     }
   };
 
-  render() {
-    const {
-      modalImage: { src, alt },
-    } = this.props;
-
-    return (
-      <Overlay className="overlay" onClick={this.handleBackdropClick}>
-        <Popup>
-          <img src={src} alt={alt} />
-        </Popup>
-      </Overlay>
-    );
-  }
-}
+  return (
+    <Overlay onClick={handleBackdropClick}>
+      <Popup>
+        <img src={src} alt={alt} />
+      </Popup>
+    </Overlay>
+  );
+};
 
 export default Modal;

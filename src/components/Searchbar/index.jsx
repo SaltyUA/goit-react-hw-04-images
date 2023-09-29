@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import {
   SearchButton,
   SearchForm,
@@ -7,54 +7,40 @@ import {
 } from './Searchbar.styled';
 import { toast } from 'react-toastify';
 
-class Searchbar extends Component {
-  state = {
-    search: '',
-  };
+const Searchbar = ({ onSubmit }) => {
+  const [search, setSearch] = useState('');
 
-  handleChange = ({ target: { value } }) => {
-    this.setState(() => ({
-      search: value,
-    }));
-  };
+  const handleChange = ({ target: { value } }) => setSearch(value);
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    if (this.state.search.trim() === '') {
+    if (search.trim() === '') {
       toast.info('Please type your search query');
       return;
     }
-    const { search } = this.state;
-    this.props.onSubmit(search);
-    this.reset();
+    onSubmit(search);
+    reset();
   };
 
-  reset = () =>
-    this.setState({
-      value: '',
-    });
+  const reset = () => setSearch('');
 
-  render() {
-    const { search } = this.state;
-
-    return (
-      <SearchbarContainer>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchInput
-            onChange={this.handleChange}
-            type="text"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={search}
-          />
-          <SearchButton type="submit">
-            <span></span>
-          </SearchButton>
-        </SearchForm>
-      </SearchbarContainer>
-    );
-  }
-}
+  return (
+    <SearchbarContainer>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchInput
+          onChange={handleChange}
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={search}
+        />
+        <SearchButton type="submit">
+          <span></span>
+        </SearchButton>
+      </SearchForm>
+    </SearchbarContainer>
+  );
+};
 
 export default Searchbar;

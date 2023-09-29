@@ -16,5 +16,5 @@ export const getImagesBySearch = async (search, page) => {
       page: page,
     },
   });
-  return response;
+  return response.data;
 };

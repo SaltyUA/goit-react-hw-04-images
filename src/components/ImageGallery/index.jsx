@@ -1,22 +1,33 @@
 import GalleryItem from 'components/GalleryItem';
-import React from 'react';
+import { useState } from 'react';
 import { ImageGalleryGrid } from './ImageGallery.styled';
+import Modal from 'components/Modal';
+import Context from 'context';
 
-const ImageGallery = ({ gallery, onClickImage }) => {
+const ImageGallery = ({ gallery }) => {
+  const [isShowModal, setIsShowModal] = useState(false);
+
+  const toggleModal = () => {
+    setIsShowModal(prev => !prev);
+  };
+
   return (
-    <ImageGalleryGrid>
-      {gallery.map(({ id, largeImageURL, webformatURL, tags }) => {
-        return (
-          <GalleryItem
-            key={id}
-            largeImageURL={largeImageURL}
-            webformatURL={webformatURL}
-            onClickImage={onClickImage}
-            alt={tags}
-          />
-        );
-      })}
-    </ImageGalleryGrid>
+    <Context>
+      <ImageGalleryGrid>
+        {gallery.map(({ id, largeImageURL, webformatURL, tags }) => {
+          return (
+            <GalleryItem
+              key={id}
+              largeImageURL={largeImageURL}
+              webformatURL={webformatURL}
+              alt={tags}
+              toggleModal={toggleModal}
+            />
+          );
+        })}
+      </ImageGalleryGrid>
+      {isShowModal && <Modal toggleModal={toggleModal} />}{' '}
+    </Context>
   );
 };
 
